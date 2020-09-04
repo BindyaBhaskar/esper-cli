@@ -45,7 +45,7 @@ class Token(Controller):
 
         return renderable
 
-    def renew_token_basic_response(self, token, format=OutputFormat.TABULATED):
+    def _renew_token_basic_response(self, token, format=OutputFormat.TABULATED):
         if format == OutputFormat.TABULATED:
             title = "TITLE"
             details = "DETAILS"
@@ -138,8 +138,8 @@ class Token(Controller):
             return
  
         if not self.app.pargs.json:
-            renderable = self.renew_token_basic_response(response)
+            renderable = self._renew_token_basic_response(response)
             self.app.render(renderable, format=OutputFormat.TABULATED.value, headers="keys", tablefmt="plain")
         else:
-            renderable = self.renew_token_basic_response(response, OutputFormat.JSON)
+            renderable = self._renew_token_basic_response(response, OutputFormat.JSON)
             self.app.render(renderable, format=OutputFormat.JSON.value)
