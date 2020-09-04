@@ -45,6 +45,24 @@ class Token(Controller):
 
         return renderable
 
+    def renew_token_basic_response(self, token, format=OutputFormat.TABULATED):
+        if format == OutputFormat.TABULATED:
+            title = "TITLE"
+            details = "DETAILS"
+            renderable = [
+                {title: 'Enterprise Id', details: token.enterprise},
+                {title: 'Token', details: token.token},
+                {title: 'Expires On', details: token.expires_at},
+            ]
+        else:
+            renderable = {
+                'Enterprise': token.enterprise,
+                'Developer App': token.developer_app,
+                'Token': token.token,
+                'Expires On': token.expires_at,
+            }
+
+        return renderable
 
 
     @ex(
@@ -120,8 +138,8 @@ class Token(Controller):
             return
  
         if not self.app.pargs.json:
-            renderable = self._token_basic_response(response)
+            renderable = self.renew_token_basic_response(response)
             self.app.render(renderable, format=OutputFormat.TABULATED.value, headers="keys", tablefmt="plain")
         else:
-            renderable = self._token_basic_response(response, OutputFormat.JSON)
+            renderable = self.renew_token_basic_response(response, OutputFormat.JSON)
             self.app.render(renderable, format=OutputFormat.JSON.value)
