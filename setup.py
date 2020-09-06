@@ -16,7 +16,7 @@ setup(
     long_description_content_type='text/markdown',
     author='Esper',
     author_email='developer@esper.io',
-    url='https://github.com/esper-io/esper-cli/',
+    url='https://github.com/BindyaBhaskar/esper-cli/',
     license='Apache 2.0',
     packages=find_packages(exclude=['ez_setup', 'tests*']),
     package_data={'esper': ['templates/*']},

@@ -31,7 +31,7 @@ class Token(Controller):
                 {title: 'Expires On', details: token.expires_on},
                 {title: 'Scope', details: token.scope},
                 {title: 'Created On', details: token.created_on},
-                {title: 'Updated On', details: token.updated_on}
+                {title: 'Updated On', details: token.updated_on},
             ]
         else:
             renderable = {
@@ -51,13 +51,14 @@ class Token(Controller):
             details = "DETAILS"
             renderable = [
                 {title: 'Enterprise Id', details: token.enterprise},
+                {title: 'Developer App', details: token.developerapp},
                 {title: 'Token', details: token.token},
                 {title: 'Expires On', details: token.expires_at},
             ]
         else:
             renderable = {
                 'Enterprise': token.enterprise,
-                'Developer App': token.developer_app,
+                'Developer App': token.developerapp,
                 'Token': token.token,
                 'Expires On': token.expires_at,
             }
