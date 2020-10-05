@@ -31,7 +31,7 @@ class Token(Controller):
                 {title: 'Expires On', details: token.expires_on},
                 {title: 'Scope', details: token.scope},
                 {title: 'Created On', details: token.created_on},
-                {title: 'Updated On', details: token.updated_on},
+                {title: 'Updated On', details: token.updated_on}
             ]
         else:
             renderable = {
@@ -44,27 +44,8 @@ class Token(Controller):
             }
 
         return renderable
-
-    def _renew_token_basic_response(self, token, format=OutputFormat.TABULATED):
-        if format == OutputFormat.TABULATED:
-            title = "TITLE"
-            details = "DETAILS"
-            renderable = [
-                {title: 'Enterprise Id', details: token.enterprise},
-                {title: 'Developer App', details: token.developerapp},
-                {title: 'Token', details: token.token},
-                {title: 'Expires On', details: token.expires_at},
-            ]
-        else:
-            renderable = {
-                'Enterprise': token.enterprise,
-                'Developer App': token.developerapp,
-                'Token': token.token,
-                'Expires On': token.expires_at,
-            }
-
-        return renderable
-
+        
+        
 
     @ex(
         help='Show token details',
@@ -93,6 +74,40 @@ class Token(Controller):
         else:
             renderable = self._token_basic_response(response, OutputFormat.JSON)
             self.app.render(renderable, format=OutputFormat.JSON.value)
+
+
+
+    def renew_token_basic_response(self, token, format=OutputFormat.TABULATED):
+        if format == OutputFormat.TABULATED:
+            title = "TITLE"
+            details = "DETAILS"
+            renderable = [
+                {title: 'Id', details: token.id},
+                {title: 'User', details: token.user},
+                {title: 'Enterprise Id', details: token.enterprise},
+                {title: 'Developer App', details: token.developerapp},
+                {title: 'Token', details: token.token},
+                {title: 'Scope', details: token.scope},
+                {title: 'Created On', details: token.created_on},
+                {title: 'Updated On', details: token.updated_on},
+                {title: 'Expires On', details: token.expires_at},
+            ]
+        else:
+            renderable = {
+                'Id': token.id,
+                'User': token.user,
+                'Enterprise Id': token.enterprise,
+                'Developer App': token.developerapp,
+                'Token': token.token,
+                'Scope': token.scope,
+                'Created On': token.created_on,
+                'Updated On': token.updated_on,
+                'Expires On': token.expires_at,
+            }
+
+        return renderable
+
+
 
     @ex(
         help='Renew Token',
@@ -132,15 +147,15 @@ class Token(Controller):
             return 
 
         try:
-            response = token_client.renew_token(enterprise_id,developer_app_id,token_to_renew)
+            response = token_client.renew_token(enterprise_id, developer_app_id, token_to_renew)
         except ApiException as e:
             self.app.log.error(f"[token-show] Failed to renew token: {e}")
             self.app.render(f"ERROR: {parse_error_message(self.app, e)}\n")
             return
  
         if not self.app.pargs.json:
-            renderable = self._renew_token_basic_response(response)
+            renderable = self.renew_token_basic_response(response)
             self.app.render(renderable, format=OutputFormat.TABULATED.value, headers="keys", tablefmt="plain")
         else:
-            renderable = self._renew_token_basic_response(response, OutputFormat.JSON)
+            renderable = self.renew_token_basic_response(response, OutputFormat.JSON)
             self.app.render(renderable, format=OutputFormat.JSON.value)
